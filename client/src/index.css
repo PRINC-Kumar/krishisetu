@@ -1,0 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  background: #f5efe0;
+  color: #213322;
+}
+
+.field {
+  @apply w-full rounded-2xl border border-grove/20 bg-white px-4 py-3 text-sm outline-none transition focus:border-leaf focus:ring-4 focus:ring-grove/10;
+}
+
+.label {
+  @apply text-sm font-semibold text-leaf;
+}
