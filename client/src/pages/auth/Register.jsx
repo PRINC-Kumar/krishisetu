@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Button from "../../components/common/Button.jsx";
 import { authApi } from "../../api/authApi.js";
-import { districts, states } from "../../utils/constants.js";
+import { districtsByState, states } from "../../utils/constants.js";
 
 export default function Register() {
   const [role, setRole] = useState("farmer");
@@ -16,7 +16,7 @@ export default function Register() {
     confirmPassword: "",
     businessName: "",
     farmSize: "",
-    location: { state: states[0], district: districts[0] },
+    location: { state: "", district: "" },
   });
 
   const navigate = useNavigate();
@@ -72,7 +72,7 @@ export default function Register() {
         </p>
         <img
           className="mt-8 h-80 w-full rounded-2xl object-cover shadow"
-          src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1100&q=80"
+          src="https://images.pexels.com/photos/38453521/pexels-photo-38453521.jpeg?auto=compress&cs=tinysrgb&w=1100"
           alt="Farmland"
         />
       </div>
@@ -187,10 +187,10 @@ export default function Register() {
               <select
                 className="field mt-1"
                 value={form.location.state}
-                onChange={(e) =>
-                  set("location", { ...form.location, state: e.target.value })
-                }
+                onChange={(e) => set("location", { state: e.target.value, district: "" })}
+                required
               >
+                <option value="">Select state</option>
                 {states.map((s) => (
                   <option key={s}>{s}</option>
                 ))}
@@ -201,11 +201,16 @@ export default function Register() {
               <select
                 className="field mt-1"
                 value={form.location.district}
+                disabled={!form.location.state}
                 onChange={(e) =>
                   set("location", { ...form.location, district: e.target.value })
                 }
+                required
               >
-                {districts.map((d) => (
+                <option value="">
+                  {form.location.state ? "Select district" : "Select state first"}
+                </option>
+                {(districtsByState[form.location.state] || []).map((d) => (
                   <option key={d}>{d}</option>
                 ))}
               </select>

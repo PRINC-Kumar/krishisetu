@@ -13,11 +13,13 @@ export default function ForgotPassword() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await authApi.forgotPassword({ email: email.trim() });
-      toast.success(`Reset token generated: ${res.data.resetToken}`);
-      navigate("/reset-password", { state: { token: res.data.resetToken } });
+      await authApi.forgotPassword({ email: email.trim().toLowerCase() });
+      toast.success("If account exists, OTP sent.");
+      navigate("/forgot-password/verify-otp", {
+        state: { email: email.trim().toLowerCase(), passwordReset: true },
+      });
     } catch (error) {
-      toast.error(error.message || "Failed to generate reset token");
+      toast.error(error.message || "Could not send OTP");
     } finally {
       setLoading(false);
     }
@@ -30,10 +32,10 @@ export default function ForgotPassword() {
     >
       <h1 className="font-heading text-3xl text-leaf">Forgot Password</h1>
       <p className="text-sm text-soil">
-        Enter your registered email address to generate a password reset token.
+        Enter your registered email address to receive a password reset OTP.
       </p>
       <div>
-        <label className="text-xs font-semibold text-soil">Account Email</label>
+        <label className="text-xs font-semibold text-soil">Registered Email Address</label>
         <input
           className="field mt-1"
           type="email"
@@ -44,7 +46,7 @@ export default function ForgotPassword() {
         />
       </div>
       <Button disabled={loading}>
-        {loading ? "Generating..." : "Create Reset Token"}
+        {loading ? "Sending..." : "Send OTP"}
       </Button>
       <div className="text-center">
         <Link className="text-sm font-semibold text-soil hover:text-leaf" to="/login">

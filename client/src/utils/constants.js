@@ -15,4 +15,12 @@ export const districts = [
   "Ahmedabad",
   "Indore",
 ];
+export const districtsByState = {
+  Maharashtra: ["Pune", "Nashik", "Nagpur"],
+  Punjab: ["Amritsar", "Ludhiana", "Jalandhar"],
+  Gujarat: ["Ahmedabad", "Surat", "Vadodara"],
+  Karnataka: ["Bengaluru Urban", "Mysuru", "Belagavi"],
+  "Uttar Pradesh": ["Lucknow", "Kanpur Nagar", "Varanasi"],
+  "Madhya Pradesh": ["Indore", "Bhopal", "Gwalior"],
+};
 export const orderSteps = ["Pending", "Accepted", "Shipped", "Delivered"];

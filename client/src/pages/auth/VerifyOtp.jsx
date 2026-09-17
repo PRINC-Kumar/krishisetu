@@ -6,11 +6,13 @@ import { authApi } from "../../api/authApi.js";
 import { useAuth } from "../../hooks/useAuth.js";
 
 export default function VerifyOtp() {
-  const phone = useLocation().state?.phone || "";
+  const location = useLocation();
+  const isPasswordReset = location.state?.passwordReset;
+  const phone = location.state?.phone || "";
+  const email = location.state?.email || "";
   const [otp, setOtp] = useState("");
-  const [cooldown, setCooldown] = useState(30);
+  const [cooldown, setCooldown] = useState(isPasswordReset ? 60 : 30);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { setUser } = useAuth();
   const { login } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
@@ -24,9 +26,14 @@ export default function VerifyOtp() {
     if (otp.length !== 6 || isSubmitting) return;
     setIsSubmitting(true);
     try {
+      if (isPasswordReset) {
+        const res = await authApi.verifyPasswordResetOtp({ email, otp });
+        toast.success("OTP verified");
+        navigate("/reset-password", { state: { token: res.data.resetToken } });
+        return;
+      }
+
       const res = await authApi.verifyOtp({ phone, otp });
-      setUser(res.data);
-      // res.data contains { ...user fields, accessToken }
       const { accessToken, ...userData } = res.data;
       login(userData, accessToken);
       toast.success("OTP verified");
@@ -40,6 +47,13 @@ export default function VerifyOtp() {
   };
   const resend = async () => {
     try {
+      if (isPasswordReset) {
+        await authApi.forgotPassword({ email });
+        setCooldown(60);
+        toast.success("If account exists, OTP sent.");
+        return;
+      }
+
       const res = await authApi.requestOtp({ phone });
       setCooldown(30);
       toast.success(`OTP sent: ${res.data.devOtp}`);
@@ -50,7 +64,10 @@ export default function VerifyOtp() {
   return (
     <section className="mx-auto max-w-md px-4 py-20">
       <div className="rounded-2xl bg-white p-6 shadow-sm">
-        <h1 className="font-heading text-3xl text-leaf">Verify OTP</h1>
+        <h1 className="font-heading text-3xl text-leaf">
+          {isPasswordReset ? "Verify Reset OTP" : "Verify OTP"}
+        </h1>
+        {isPasswordReset && <p className="mt-2 text-sm text-soil">Enter the 6-digit code sent to your email address.</p>}
         <input
           className="field mt-6 text-center text-2xl tracking-[0.4em]"
           maxLength="6"

@@ -10,19 +10,27 @@ export default function ResetPassword() {
   const [form, setForm] = useState({
     token: location.state?.token || "",
     password: "",
+    confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
 
   const submit = async (e) => {
     e.preventDefault();
-    if (form.password.length < 6) {
-      toast.error("Password must be at least 6 characters");
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/.test(form.password)) {
+      toast.error("Use 8+ characters with upper, lower, number, and special character");
+      return;
+    }
+    if (form.password !== form.confirmPassword) {
+      toast.error("Passwords do not match");
       return;
     }
 
     setLoading(true);
     try {
-      await authApi.resetPassword(form);
+      await authApi.resetPassword({
+        resetToken: form.token,
+        newPassword: form.password,
+      });
       toast.success("Password reset successfully! Please log in.");
       navigate("/login");
     } catch (error) {
@@ -39,26 +47,30 @@ export default function ResetPassword() {
     >
       <h1 className="font-heading text-3xl text-leaf">Reset Password</h1>
       <p className="text-sm text-soil">
-        Enter the reset token generated for your account along with your new password.
+        Choose a strong new password for your account.
       </p>
       <div>
-        <label className="text-xs font-semibold text-soil">Reset Token</label>
-        <input
-          className="field mt-1"
-          placeholder="Paste reset token here"
-          value={form.token}
-          onChange={(e) => setForm({ ...form, token: e.target.value })}
-          required
-        />
+        <input type="hidden" value={form.token} readOnly />
       </div>
       <div>
         <label className="text-xs font-semibold text-soil">New Password</label>
         <input
           className="field mt-1"
           type="password"
-          placeholder="New password (min 6 chars)"
+          placeholder="8+ chars with upper, lower, number, and symbol"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
+          required
+        />
+      </div>
+      <div>
+        <label className="text-xs font-semibold text-soil">Confirm New Password</label>
+        <input
+          className="field mt-1"
+          type="password"
+          placeholder="Re-enter your new password"
+          value={form.confirmPassword}
+          onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
           required
         />
       </div>

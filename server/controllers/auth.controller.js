@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.model.js";
 import { sendSuccess, sendError } from "../utils/apiResponse.js";
@@ -259,58 +258,3 @@ export const logout = async (req, res) => {
   sendSuccess(res, "Logged out successfully");
 };
 
-// Creates a reset token for accounts.
-export const forgotPassword = async (req, res, next) => {
-  try {
-    const user = await User.findOne({
-      email: req.body.email?.trim().toLowerCase(),
-    });
-    if (!user) return sendError(res, "No account found with this email", 404);
-
-    const rawToken = crypto.randomBytes(24).toString("hex");
-    user.resetPasswordToken = crypto
-      .createHash("sha256")
-      .update(rawToken)
-      .digest("hex");
-    user.resetPasswordExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
-    await user.save();
-
-    sendSuccess(res, "Reset token created for testing", {
-      resetToken: rawToken,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Applies a new password after validating the reset token.
-export const resetPassword = async (req, res, next) => {
-  try {
-    const { token, password } = req.body;
-    if (!token || !password || password.length < 6) {
-      return sendError(res, "Valid token and password (min 6 characters) are required", 400);
-    }
-
-    const hashedToken = crypto
-      .createHash("sha256")
-      .update(token)
-      .digest("hex");
-
-    const user = await User.findOne({
-      resetPasswordToken: hashedToken,
-      resetPasswordExpiresAt: { $gt: new Date() },
-    }).select("+password +resetPasswordToken");
-
-    if (!user) return sendError(res, "Reset token expired or invalid", 401);
-
-    user.password = await bcrypt.hash(password, 10);
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpiresAt = undefined;
-    user.refreshTokenHash = null; // Revoke existing sessions on password change
-    await user.save();
-
-    sendSuccess(res, "Password reset successful");
-  } catch (error) {
-    next(error);
-  }
-};

@@ -1,14 +1,12 @@
 import express from "express";
 import { body } from "express-validator";
 import {
-  forgotPassword,
   loginWithPassword,
   logout,
   me,
   refreshToken,
   register,
   requestFarmerOtp,
-  resetPassword,
   verifyFarmerOtp,
 } from "../controllers/auth.controller.js";
 import { verifyToken } from "../middleware/auth.middleware.js";
@@ -51,21 +49,6 @@ router.post(
   body("otp").isLength({ min: 6, max: 6 }).withMessage("OTP must be 6 digits"),
   validate,
   verifyFarmerOtp,
-);
-
-router.post(
-  "/forgot-password",
-  body("email").isEmail().withMessage("Valid email is required"),
-  validate,
-  forgotPassword,
-);
-
-router.post(
-  "/reset-password",
-  body("token").notEmpty().withMessage("Reset token is required"),
-  body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
-  validate,
-  resetPassword,
 );
 
 router.get("/me", verifyToken, me);

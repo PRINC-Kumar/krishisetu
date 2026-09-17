@@ -21,11 +21,12 @@ import AdminDashboard from "../pages/admin/AdminDashboard.jsx";
 import ManageUsers from "../pages/admin/ManageUsers.jsx";
 import AdminListings from "../pages/admin/AdminListings.jsx";
 import Disputes from "../pages/admin/Disputes.jsx";
+import Home from "../pages/Home.jsx";
 
 function HomeRedirect() {
   const { user, role, isLoading } = useAuth();
   if (isLoading) return <Loader />;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Home />;
   if (role === "farmer") return <Navigate to="/farmer/dashboard" replace />;
   if (role === "admin") return <Navigate to="/admin/dashboard" replace />;
   return <Navigate to="/buyer/marketplace" replace />;
@@ -50,6 +51,7 @@ export default function AppRoutes() {
             <Route path="/login" element={<Login />} />
             <Route path="/login/farmer/verify-otp" element={<VerifyOtp />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/forgot-password/verify-otp" element={<VerifyOtp />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/not-authorized" element={<NotAuthorized />} />
 

@@ -17,4 +17,9 @@ export const env = {
   clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
   nodeEnv: process.env.NODE_ENV || "development",
   cookieSecure: process.env.COOKIE_SECURE === "true",
+  emailHost: process.env.EMAIL_HOST || "",
+  emailPort: Number(process.env.EMAIL_PORT || 587),
+  emailUser: process.env.EMAIL_USER || "",
+  emailPassword: process.env.EMAIL_PASSWORD || "",
+  emailFrom: process.env.EMAIL_FROM || process.env.EMAIL_USER || "",
 };

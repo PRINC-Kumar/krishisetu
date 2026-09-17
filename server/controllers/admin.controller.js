@@ -71,11 +71,15 @@ export const createAdmin = async (req, res, next) => {
     }
 
     const user = await User.create({
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
       name: req.body.name?.trim(),
       email: trimmedEmail,
       phone: trimmedPhone,
       password: await bcrypt.hash(req.body.password, 10),
       role: "admin",
+      location: req.body.location,
       location: req.body.location || { state: "Maharashtra", district: "Pune" },
       isVerified: true,
     });

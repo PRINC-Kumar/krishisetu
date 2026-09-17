@@ -128,9 +128,9 @@ export default function ManageUsers() {
                   </Button>
                 )}
               </div>
-            </Card>
-          ))}
-        </div>
+          </Card>
+        ))}
+      </div>
       )}
     </section>
   );

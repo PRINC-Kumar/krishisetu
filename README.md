@@ -1,14 +1,25 @@
-# KrishiSetu
+# KrishiSetu - B2B Agricultural Trading Platform
 
-KrishiSetu is a MERN-stack MVP for a B2B agricultural trading loop: farmers list harvests, buyers discover and negotiate, orders move through fulfillment, and admins verify farmers and oversee disputes.
+KrishiSetu is a full-stack agricultural marketplace that connects farmers and buyers through a role-based trading workflow. Farmers can publish harvest listings, buyers can discover and negotiate for produce, and both parties can track orders while admins manage verification and disputes.
 
 ## Tech Stack
 
 - MongoDB, Express, React, Node.js
-- JWT in httpOnly cookies
-- Socket.io negotiation events
-- Multer local uploads
-- Tailwind CSS, Framer Motion, Recharts, react-hot-toast
+- JWT access and refresh tokens in httpOnly cookies
+- Socket.io real-time offer negotiation
+- Multer-based local listing image uploads
+- Tailwind CSS, Framer Motion, Recharts, and react-hot-toast
+
+## Implemented Features
+
+- Separate Farmer, Buyer, and Admin experiences with protected routes and backend role-based access control.
+- Farmer registration with phone/location details, OTP login, admin verification, and listing management.
+- Buyer marketplace with crop search, state and district filters, price range filters, pagination, listing details, and mandi price charts.
+- Real-time buyer-farmer negotiation rooms with offer creation, acceptance, and rejection.
+- End-to-end order workflow with quantity, negotiated price, COD or offline payment selection, and Pending, Accepted, Shipped, Delivered, and Cancelled statuses.
+- Buyer and farmer dispute reporting with admin flagging, notes, and resolution controls.
+- Email OTP password reset flow with expiry and attempt limits.
+- Admin dashboards for user verification, listing oversight, order monitoring, and dispute management.
 
 ## Setup
 
@@ -38,8 +49,8 @@ Backend: `http://localhost:5001`
 ## Role Flow
 
 - Farmers register with phone/location and log in using OTP. They must be admin-approved before creating listings.
-- Buyers register and log in with email/password, browse listings, negotiate, and place orders.
-- Admins are seeded or created by an existing admin, verify farmers, view listings/orders, and flag or resolve disputes.
+- Buyers register and log in with email/password, browse and filter listings, negotiate, and place orders using COD or offline payment.
+- Admins are seeded or created by an existing admin, verify farmers, review listings and orders, and flag or resolve disputes.
 
 Every protected backend route uses `verifyToken`; role-specific routes also use `restrictTo(...)`. The frontend mirrors this with `ProtectedRoute` and `RoleBasedRoute`, but backend RBAC remains the source of truth.
 

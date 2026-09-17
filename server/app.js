@@ -12,6 +12,7 @@ import orderRoutes from "./routes/order.routes.js";
 import offerRoutes from "./routes/offer.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import mandiPriceRoutes from "./routes/mandiPrice.routes.js";
+import passwordResetRoutes from "./routes/passwordReset.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const app = express();
@@ -25,6 +26,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.get("/api/health", (req, res) =>
   res.json({ success: true, message: "KrishiSetu API is healthy", data: null }),
 );
+app.use("/api/auth", passwordResetRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/listings", listingRoutes);
 app.use("/api/orders", orderRoutes);

@@ -65,7 +65,7 @@ export default function Login() {
     <section className="mx-auto grid min-h-[calc(100vh-65px)] max-w-6xl items-center gap-8 px-4 py-10 md:grid-cols-2">
       <img
         className="h-[520px] w-full rounded-2xl object-cover shadow"
-        src="https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=1200&q=80"
+        src="https://images.unsplash.com/photo-1499529112087-3cb3b73cec95?auto=format&fit=crop&w=1200&q=85"
         alt="Agriculture"
       />
       <form onSubmit={submit} className="rounded-2xl bg-white p-6 shadow-sm">
